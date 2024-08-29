@@ -1,29 +1,35 @@
 import * as React from "react";
-import {StyleSheet, View, Text, Pressable} from "react-native";
+import {StyleSheet, View, Text, Pressable,Button} from "react-native";
 import { Image } from 'expo-image';
+import {Link} from 'expo-router';
 
-const LoginScreen = () => {
+
+const IndexScreen = () => {
   	
   	return (
     		<View style={styles.loginScreen}>
       			<View style={[styles.form, styles.formLayout]}>
         				<View style={[styles.formChild, styles.formLayout]} />
-        				<Pressable style={styles.dontHaveAnContainer} onPress={()=>{}}>
+                <Link href="/signup">
+        				<Pressable style={styles.dontHaveAnContainer}>
           					<Text style={styles.text}>
             						<Text style={styles.dontHaveAn}>{`Don’t have an account? `}</Text>
             						<Text style={styles.signUp}>Sign Up</Text>
           					</Text>
         				</Pressable>
+                </Link>
         				<View style={[styles.google, styles.googleLayout]}>
           					<View style={[styles.googleChild, styles.childPosition]} />
           					<Text style={styles.google1}>Google</Text>
-          					<Image style={styles.vectorIcon} contentFit="cover" source="Vector.png" />
+          					<Image style={styles.vectorIcon} contentFit="cover" source={"assets/images/Vector.png"} />
         				</View>
         				<Text style={[styles.forgotPassword, styles.logIn1FlexBox]}>Forgot password?</Text>
-          					<View style={[styles.logIn, styles.logLayout]}>
+                <Link href="/dashboard">
+          					<Pressable style={[styles.logIn, styles.logLayout]}>
             						<View style={[styles.logInChild, styles.logLayout]} />
             						<Text style={[styles.logIn1, styles.logLayout]}>Log In</Text>
-          					</View>
+          					</Pressable>
+                    </Link>
           					<View style={[styles.password, styles.emailPosition]}>
             						<View style={[styles.passwordChild, styles.childLayout]} />
             						<Text style={[styles.password1, styles.email1Typo]}>Password</Text>
@@ -34,7 +40,7 @@ const LoginScreen = () => {
           					</View>
           					<Text style={styles.logIn2}>Log In</Text>
           					</View>
-          					<Image style={styles.loginpicIcon} contentFit="cover" source= "loginpic.png" />
+          					<Image style={styles.loginpicIcon} contentFit="cover" source= "assets/images/loginpic.png" />
           					</View>);
         				};
         				
@@ -131,10 +137,10 @@ const LoginScreen = () => {
             						position: "absolute"
           					},
           					google1: {
-            						top: 10,
+            						top: 9,
             						left: 45,
             						width: 66,
-            						height: 17,
+            						height: 19,
             						alignItems: "center",
             						display: "flex",
             						textAlign: "left",
@@ -188,11 +194,11 @@ const LoginScreen = () => {
           					},
           					password1: {
             						width: 81,
-            						height: 17
+            						height: 10
           					},
           					password: {
             						top: 236,
-            						height: 18
+            						height: 30
           					},
           					emailChild: {
             						top: 23
@@ -233,5 +239,5 @@ const LoginScreen = () => {
           					}
         				});
         				
-        				export default LoginScreen;
+        				export default IndexScreen;
         				
