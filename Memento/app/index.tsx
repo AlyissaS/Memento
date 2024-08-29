@@ -177,7 +177,7 @@ const LoginScreen = () => {
             						textAlign: "center",
             						fontFamily: "Belgrano-Regular",
             						left: 0,
-            						top: 0
+            						top: 15
           					},
           					logIn: {
             						top: 312,
