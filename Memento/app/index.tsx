@@ -41,12 +41,12 @@ const IndexScreen = () => {
       <View style={styles.loginScreen}>
       <View style={[styles.form, styles.formLayout]}>
       <View style={[styles.formChild, styles.formLayout]} />
-      <Link style={styles.dontHaveAnContainer} href="/signup">
+      <Pressable style={styles.dontHaveAnContainer} onPress={signUp}>
       <Text style={styles.text}>
       <Text style={styles.dontHaveAn}>{`Don’t have an account? `}</Text>
       <Text style={styles.signUp}>Sign Up</Text>
       </Text>
-      </Link>
+      </Pressable>
       <View style={[styles.google, styles.googleLayout]}>
       <View style={[styles.googleChild, styles.childPosition]} />
       <Text style={styles.google1}>Google</Text>
@@ -55,7 +55,9 @@ const IndexScreen = () => {
       <Text style={[styles.forgotPassword, styles.logIn1FlexBox]}>Forgot password?</Text>
       <View style={[styles.logIn, styles.logLayout]}>
       <View style={[styles.logInChild, styles.logLayout]} />
-      <Link style={[styles.logIn1, styles.logLayout]} href="/dashboard">Log In</Link>
+      <Pressable style={[styles.logIn1, styles.logLayout]} onPress={signIn}>
+        <Text style={styles.textLayout}>Log In</Text>
+        </Pressable>
       </View>
       <KeyboardAvoidingView behavior="padding">
           					<TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
@@ -72,6 +74,10 @@ const IndexScreen = () => {
         				};
         				
         				const styles = StyleSheet.create({
+                  textLayout: {
+                    textAlign:'center',
+                    marginBottom: 30
+                  },
           					formLayout: {
             						height: 600,
             						width: 430,
