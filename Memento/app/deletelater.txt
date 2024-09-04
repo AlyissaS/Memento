@@ -1,0 +1,35 @@
+		<View style={styles.loginScreen}>
+      			<View style={[styles.form, styles.formLayout]}>
+        				<View style={[styles.formChild, styles.formLayout]} />
+                <Link href="/signup">
+        				<Pressable style={styles.dontHaveAnContainer}>
+          					<Text style={styles.text}>
+            						<Text style={styles.dontHaveAn}>{`Don’t have an account? `}</Text>
+            						<Text style={styles.signUp}>Sign Up</Text>
+          					</Text>
+        				</Pressable>
+                </Link>
+        				<View style={[styles.google, styles.googleLayout]}>
+          					<View style={[styles.googleChild, styles.childPosition]} />
+          					<Text style={styles.google1}>Google</Text>
+          					<Image style={styles.vectorIcon} contentFit="cover" source={"assets/images/Vector.png"} />
+        				</View>
+        				<Text style={[styles.forgotPassword, styles.logIn1FlexBox]}>Forgot password?</Text>
+                <Link href="/dashboard">
+          					<Pressable style={[styles.logIn, styles.logLayout]}>
+            						<View style={[styles.logInChild, styles.logLayout]} />
+            						<Button color="black" title="Log In" />
+          					</Pressable>
+                    </Link>
+                    <KeyboardAvoidingView behavior="padding">
+          					<TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
+            						<View style={[styles.passwordChild, styles.childLayout]} />
+          					</TextInput>
+          					<TextInput style={[styles.email, styles.emailPosition]} value={email} autoCapitalize="none" keyboardType="email-address" onChangeText={setEmail} placeholder="Email">
+            						<View style={[styles.emailChild, styles.childLayout]} />
+          					</TextInput>
+                    </KeyboardAvoidingView>
+          					<Text style={styles.logIn2}>Log In</Text>
+          					</View>
+          					<Image style={styles.loginpicIcon} contentFit="cover" source= "assets/images/loginpic.png" />
+          					</View>);

@@ -160,7 +160,7 @@ export default function login() {
           					left: 163
         				},
         				logIn: {
-          					top: 378,
+          					top: 700,
           					fontSize: 40,
           					left: 35,
           					color: "#ff8e47",

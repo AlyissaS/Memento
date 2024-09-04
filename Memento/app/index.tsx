@@ -1,47 +1,74 @@
 import * as React from "react";
-import {StyleSheet, View, Text, Pressable,Button} from "react-native";
+import {StyleSheet, View, Text, Pressable,TextInput, KeyboardAvoidingView, ActivityIndicator, Button} from "react-native";
 import { Image } from 'expo-image';
 import {Link} from 'expo-router';
+import { useState } from 'react';
+import auth from '@react-native-firebase/auth';
+import {FirebaseError} from 'firebase/app';
 
 
 const IndexScreen = () => {
+  const [email,setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const signIn = async () => {
+    setLoading(true);
+    try {
+      await auth().signInWithEmailAndPassword(email,password);
+    } catch(e: any) {
+      const err = e as FirebaseError;
+      alert('Sign in failed:'+ err.message);
+    } finally {
+    setLoading(false);
+    }
+  };
+
+  const signUp = async () => {
+    setLoading(true);
+    try {
+        await auth().createUserWithEmailAndPassword(email,password);
+        alert('Check your emails');
+    } catch (e: any) {
+      const err = e as FirebaseError;
+      alert('Registration failed:' + err.message);
+    } finally {
+      setLoading(false);
+    }
+};
   	
   	return (
-    		<View style={styles.loginScreen}>
-      			<View style={[styles.form, styles.formLayout]}>
-        				<View style={[styles.formChild, styles.formLayout]} />
-                <Link href="/signup">
-        				<Pressable style={styles.dontHaveAnContainer}>
-          					<Text style={styles.text}>
-            						<Text style={styles.dontHaveAn}>{`Don’t have an account? `}</Text>
-            						<Text style={styles.signUp}>Sign Up</Text>
-          					</Text>
-        				</Pressable>
-                </Link>
-        				<View style={[styles.google, styles.googleLayout]}>
-          					<View style={[styles.googleChild, styles.childPosition]} />
-          					<Text style={styles.google1}>Google</Text>
-          					<Image style={styles.vectorIcon} contentFit="cover" source={"assets/images/Vector.png"} />
-        				</View>
-        				<Text style={[styles.forgotPassword, styles.logIn1FlexBox]}>Forgot password?</Text>
-                <Link href="/dashboard">
-          					<Pressable style={[styles.logIn, styles.logLayout]}>
-            						<View style={[styles.logInChild, styles.logLayout]} />
-            						<Text style={[styles.logIn1, styles.logLayout]}>Log In</Text>
-          					</Pressable>
-                    </Link>
-          					<View style={[styles.password, styles.emailPosition]}>
+      <View style={styles.loginScreen}>
+      <View style={[styles.form, styles.formLayout]}>
+      <View style={[styles.formChild, styles.formLayout]} />
+      <Link style={styles.dontHaveAnContainer} href="/signup">
+      <Text style={styles.text}>
+      <Text style={styles.dontHaveAn}>{`Don’t have an account? `}</Text>
+      <Text style={styles.signUp}>Sign Up</Text>
+      </Text>
+      </Link>
+      <View style={[styles.google, styles.googleLayout]}>
+      <View style={[styles.googleChild, styles.childPosition]} />
+      <Text style={styles.google1}>Google</Text>
+      <Image style={styles.vectorIcon} contentFit="cover" source="Vector.png" />
+      </View>
+      <Text style={[styles.forgotPassword, styles.logIn1FlexBox]}>Forgot password?</Text>
+      <View style={[styles.logIn, styles.logLayout]}>
+      <View style={[styles.logInChild, styles.logLayout]} />
+      <Link style={[styles.logIn1, styles.logLayout]} href="/dashboard">Log In</Link>
+      </View>
+      <KeyboardAvoidingView behavior="padding">
+          					<TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
             						<View style={[styles.passwordChild, styles.childLayout]} />
-            						<Text style={[styles.password1, styles.email1Typo]}>Password</Text>
-          					</View>
-          					<View style={[styles.email, styles.emailPosition]}>
+          					</TextInput>
+          					<TextInput style={[styles.email, styles.emailPosition]} value={email} autoCapitalize="none" keyboardType="email-address" onChangeText={setEmail} placeholder="Email">
             						<View style={[styles.emailChild, styles.childLayout]} />
-            						<Text style={[styles.email1, styles.email1Typo]}>Email</Text>
-          					</View>
-          					<Text style={styles.logIn2}>Log In</Text>
-          					</View>
-          					<Image style={styles.loginpicIcon} contentFit="cover" source= "assets/images/loginpic.png" />
-          					</View>);
+          					</TextInput>
+      </KeyboardAvoidingView>
+      <Text style={styles.logIn2}>Log In</Text>
+      </View>
+      <Image style={styles.loginpicIcon} contentFit="cover" source="loginpic.png" />
+      </View>);
         				};
         				
         				const styles = StyleSheet.create({
@@ -186,9 +213,9 @@ const IndexScreen = () => {
             						top: 15
           					},
           					logIn: {
-            						top: 312,
-            						left: 39
-          					},
+                      top: 312,
+                      left: 39
+                      },
           					passwordChild: {
             						top: 18
           					},
@@ -197,7 +224,7 @@ const IndexScreen = () => {
             						height: 10
           					},
           					password: {
-            						top: 236,
+            						top: 238,
             						height: 30
           					},
           					emailChild: {
@@ -212,13 +239,13 @@ const IndexScreen = () => {
             						height: 23
           					},
           					logIn2: {
-            						top: 46,
-            						fontSize: 40,
-            						left: 35,
-            						color: "#ff8e47",
-            						textAlign: "center",
-            						fontFamily: "Belgrano-Regular",
-            						position: "absolute"
+                      top: 46,
+                      fontSize: 40,
+                      left: 35,
+                      color: "#ff8e47",
+                      textAlign: "center",
+                      fontFamily: "Belgrano-Regular",
+                      position: "absolute"
           					},
           					form: {
             						top: 332

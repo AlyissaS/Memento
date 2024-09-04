@@ -2,6 +2,7 @@ import * as React from "react";
 import { StyleSheet, View, Text, Pressable} from "react-native";
 import { Image } from 'expo-image';
 import {Link} from 'expo-router';
+import auth from '@react-native-firebase/auth';
 
 export default function SignUpScreen() {
   	
