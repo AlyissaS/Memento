@@ -61,10 +61,8 @@ const IndexScreen = () => {
       </View>
       <KeyboardAvoidingView behavior="padding">
           					<TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
-            						<View style={[styles.passwordChild, styles.childLayout]} />
           					</TextInput>
           					<TextInput style={[styles.email, styles.emailPosition]} value={email} autoCapitalize="none" keyboardType="email-address" onChangeText={setEmail} placeholder="Email">
-            						<View style={[styles.emailChild, styles.childLayout]} />
           					</TextInput>
       </KeyboardAvoidingView>
       <Text style={styles.logIn2}>Log In</Text>
