@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { defaultStyles } from '@/constants/Styles'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'

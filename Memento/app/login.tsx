@@ -1,7 +1,5 @@
-import * as React from "react";
 import {StyleSheet, View, Text, Pressable,TextInput, KeyboardAvoidingView, ActivityIndicator, Button} from "react-native";
 import { Image } from 'expo-image';
-import {Link} from 'expo-router';
 import { useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import {FirebaseError} from 'firebase/app';

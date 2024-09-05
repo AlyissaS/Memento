@@ -1,4 +1,3 @@
-import * as React from "react";
 import { StyleSheet, View, Text, Pressable} from "react-native";
 import { Image } from 'expo-image';
 import {Link} from 'expo-router';
