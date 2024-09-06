@@ -1,17 +1,16 @@
 import {memo} from 'react';
-import * as React from "react";
 import {StyleSheet,View} from 'react-native';
 import { Image } from 'expo-image';
 
 const AnimatedIntro = () => {
     return (
         <View style={styles.loadingScreen}>
-        <Image style={styles.mpicIcon} contentFit="cover" source="Mpic.png" />
-        <Image style={[styles.ripplepicIcon, styles.iconPosition]} contentFit="cover" source="ripplepic.png" />
-        <Image style={[styles.fishesIcon, styles.iconPosition]} contentFit="cover" source="fishes.png" />
-        <Image style={[styles.leftcornerpadIcon, styles.iconLayout]} contentFit="cover" source="leftcornerpad.png" />
-        <Image style={[styles.rightcronerpadIcon, styles.iconLayout]} contentFit="cover" source="rightcronerpad.png" />
-        <Image style={styles.middlepadIcon} contentFit="cover" source="middlepad.png" />
+        <Image style={styles.mpicIcon} contentFit="cover" source="./assets/images/Mpic.png" />
+        <Image style={[styles.ripplepicIcon, styles.iconPosition]} contentFit="cover" source="./assets/images/ripplepic.png" />
+        <Image style={[styles.fishesIcon, styles.iconPosition]} contentFit="cover" source="./assets/images/fishes.png" />
+        <Image style={[styles.leftcornerpadIcon, styles.iconLayout]} contentFit="cover" source="./assets/images/leftcornerpad.png" />
+        <Image style={[styles.rightcronerpadIcon, styles.iconLayout]} contentFit="cover" source="./assets/images/rightcronerpad.png" />
+        <Image style={styles.middlepadIcon} contentFit="cover" source="./assets/images/middlepad.png" />
         </View>
         );
     };
