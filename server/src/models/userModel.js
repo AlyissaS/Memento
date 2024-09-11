@@ -1,6 +1,5 @@
-const db = require('../config/firebase'); // Assuming Firebase is set up properly
+const db = require('../config/firebase'); 
 
-// Define the user model structure
 const userModel = {
   userId: '',
   name: '',
@@ -9,32 +8,58 @@ const userModel = {
   profilePicture: ''
 };
 
-// Function to create a user profile in Firestore
+const checkEmailExists = async (email) => {
+  const usersRef = db.collection('users');
+  const snapshot = await usersRef.where('email', '==', email).get();
+
+  if (!snapshot.empty) {
+    return true;
+  }
+
+  return false; 
+};
+
+
 const createUser = async (userData) => {
   try {
-    const userRef = db.collection('users').doc(userData.userId); // Reference Firestore collection 'users'
-    await userRef.set(userData); // Set the document with user data
-    return userData; // Return the created user data
+    // Check if the email already exists
+    const emailExists = await checkEmailExists(userData.email);
+    if (emailExists) {
+      throw new Error('Email already exists');
+    }
+
+    const userRef = db.collection('users').doc(); 
+    const userId = userRef.id;  
+
+  
+    const newUser = {
+      ...userModel, 
+      userId,        
+      ...userData    
+    };
+
+    await userRef.set(newUser);  
+    return newUser; 
   } catch (error) {
-    throw new Error(Error creating user: ${error.message}); // Handle errors
+    throw new Error(`Error creating user: ${error.message}`);
   }
 };
 
-// Function to get a user profile by userId from Firestore
+
 const getUserProfile = async (userId) => {
   try {
-    const userRef = db.collection('users').doc(userId); // Reference Firestore document
-    const doc = await userRef.get(); // Get document snapshot
+    const userRef = db.collection('users').doc(userId); 
+    const doc = await userRef.get(); 
     if (!doc.exists) {
-      throw new Error('User not found'); // Handle case where user does not exist
+      throw new Error('User not found'); 
     }
     return doc.data(); // Return user data
   } catch (error) {
-    throw new Error(Error fetching user: ${error.message}); // Handle errors
+    throw new Error(`Error fetching user: ${error.message}`); 
   }
 };
 
-// Export the functions and the model
+
 module.exports = {
   userModel,
   createUser,
