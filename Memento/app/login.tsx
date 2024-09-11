@@ -1,39 +1,41 @@
-import {StyleSheet, View, Text, Pressable,TextInput, KeyboardAvoidingView, ActivityIndicator, Button} from "react-native";
+import {StyleSheet, View, Text, Pressable,TextInput, KeyboardAvoidingView, Platform} from "react-native";
 import { Image } from 'expo-image';
 import { useState } from 'react';
+import { useLocalSearchParams } from 'expo-router'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { router } from 'expo-router';
 import auth from '@react-native-firebase/auth';
-import {FirebaseError} from 'firebase/app';
 
 
-const IndexScreen = () => {
-  const [email,setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const signIn = async () => {
-    setLoading(true);
-    try {
-      await auth().signInWithEmailAndPassword(email,password);
-    } catch(e: any) {
-      const err = e as FirebaseError;
-      alert('Sign in failed:'+ err.message);
-    } finally {
-    setLoading(false);
-    }
-  };
-
-  const signUp = async () => {
-    setLoading(true);
-    try {
-        await auth().createUserWithEmailAndPassword(email,password);
-        alert('Check your emails');
-    } catch (e: any) {
-      const err = e as FirebaseError;
-      alert('Registration failed:' + err.message);
-    } finally {
-      setLoading(false);
-    }
-};
+const LoginScreen = () => {
+	const { type } = useLocalSearchParams<{type: string}>();
+	const [loading, setLoading] = useState(false);
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+  
+	const signIn = async () => {
+	  setLoading(true)
+	  try {
+		const user = await auth().signInWithEmailAndPassword(email, password);
+		if (user) router.replace('/(auth)/dashboard')
+	  } catch (error: any) {
+		console.log(error)
+		alert('Sign in failed: ' + error.message);
+	  }
+	  setLoading(false)
+	}
+  
+	const signUp = async () => {
+	  setLoading(true)
+	  try {
+		const user = await auth().createUserWithEmailAndPassword(email, password);
+		if (user) router.replace('/signup')
+	  } catch (error: any) {
+		console.log(error)
+		alert('Sign in failed: ' + error.message);
+	  }
+	  setLoading(false)
+	}
   	
   	return (
       <View style={styles.loginScreen}>
@@ -57,7 +59,9 @@ const IndexScreen = () => {
         <Text style={styles.textLayout}>Log In</Text>
         </Pressable>
       </View>
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+      keyboardVerticalOffset={1}>
           					<TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
           					</TextInput>
           					<TextInput style={[styles.email, styles.emailPosition]} value={email} autoCapitalize="none" keyboardType="email-address" onChangeText={setEmail} placeholder="Email">
@@ -70,6 +74,10 @@ const IndexScreen = () => {
         				};
         				
         				const styles = StyleSheet.create({
+							container: {
+								flex: 1,
+								padding: 20,
+							  },
                   textLayout: {
                     textAlign:'center',
                     marginBottom: 30
@@ -268,5 +276,5 @@ const IndexScreen = () => {
           					}
         				});
         				
-        				export default IndexScreen;
+        				export default LoginScreen;
         				

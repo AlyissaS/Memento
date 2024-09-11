@@ -1,4 +1,3 @@
-import {memo} from 'react';
 import {StyleSheet,View} from 'react-native';
 import { Image } from 'expo-image';
 
@@ -66,4 +65,4 @@ const AnimatedIntro = () => {
         }
         });
         
-export default memo(AnimatedIntro);
+export default AnimatedIntro;

@@ -1,36 +1,29 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { defaultStyles } from '@/constants/Styles'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {ColorPalette} from '@/constants/Colors'
-import { Link } from 'expo-router'
+import { Link, useNavigation } from 'expo-router'
+import SignUpScreen from './signup'
+import LoginScreen from './login'
 
 const BottomLoginSheet = () => {
+  const navigation = useNavigation();
+  const navigateToSignUp = () => {
+    console.log('Navigating to SignUp'); // Debug line
+    navigation.navigate('signup');
+  };
 
   const { bottom }  = useSafeAreaInsets();
   return (
     <View style={[styles.container, { paddingBottom: bottom }]}>
-      <Link href={{
-        pathname: '/signup',
-        params: {
-          type: 'register',
-        }
-      }} asChild style={[defaultStyles.btn, styles.btnDark]}>
-        <TouchableOpacity>
+        <Pressable style={[defaultStyles.btn, styles.btnDark]} onPress={navigateToSignUp}>
           <Ionicons name="mail" size={20} style={styles.btnIcon} color={ColorPalette.light}/>
           <Text style={styles.btnDarkText}>Continue with Email</Text>
-        </TouchableOpacity>
-      </Link>
-      <Link href={{
-        pathname: '/login',
-        params: {
-          type: 'login',
-        }
-}} asChild style={[defaultStyles.btn, styles.btnDark]}>
-        <TouchableOpacity>
+          </Pressable>
+          <Pressable style= {[defaultStyles.btn, styles.btnDark]} onPress={LoginScreen}>
           <Text style={styles.btnDarkText}>Log in</Text>
-        </TouchableOpacity>
-      </Link>
+          </Pressable>
     </View>
   )
 }
