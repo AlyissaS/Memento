@@ -1,5 +1,6 @@
-const firebase = require('../config/firebase');
+const db = require('../config/firebase'); // Assuming Firebase is set up properly
 
+// Define the user model structure
 const userModel = {
   userId: '',
   name: '',
@@ -8,23 +9,34 @@ const userModel = {
   profilePicture: ''
 };
 
+// Function to create a user profile in Firestore
 const createUser = async (userData) => {
-  const userRef = firebase.firestore().collection('users').doc(userData.userId);
-  await userRef.set(userData);
-  return userData;
-};
-
-const getUserById = async (userId) => {
-  const userRef = firebase.firestore().collection('users').doc(userId);
-  const doc = await userRef.get();
-  if (!doc.exists) {
-    throw new Error('User not found');
+  try {
+    const userRef = db.collection('users').doc(userData.userId); // Reference Firestore collection 'users'
+    await userRef.set(userData); // Set the document with user data
+    return userData; // Return the created user data
+  } catch (error) {
+    throw new Error(Error creating user: ${error.message}); // Handle errors
   }
-  return doc.data();
 };
 
+// Function to get a user profile by userId from Firestore
+const getUserProfile = async (userId) => {
+  try {
+    const userRef = db.collection('users').doc(userId); // Reference Firestore document
+    const doc = await userRef.get(); // Get document snapshot
+    if (!doc.exists) {
+      throw new Error('User not found'); // Handle case where user does not exist
+    }
+    return doc.data(); // Return user data
+  } catch (error) {
+    throw new Error(Error fetching user: ${error.message}); // Handle errors
+  }
+};
+
+// Export the functions and the model
 module.exports = {
   userModel,
   createUser,
-  getUserById
+  getUserProfile
 };

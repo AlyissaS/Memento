@@ -1,31 +1,28 @@
-const { createUser, getUserById } = require('../models/userModel');
+const { createUser, getUserProfile } = require('../models/userModel');
 
-const getUsers = async (req, res) => {
+// Controller to handle creating a new user profile
+const createUserHandler = async (req, res) => {
   try {
-    const { userId } = req.query;
-    if (userId) {
-      const user = await getUserById(userId);
-      return res.json(user);
-    }
-    return res.status(404).json({ message: 'User not found' });
+    const userData = req.body; // Capture the user data from the request body
+    const newUser = await createUser(userData); // Call the createUser function from the model
+    res.status(201).json(newUser); // Respond with the newly created user data
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message }); // Respond with error message if something goes wrong
   }
 };
 
-const createUserHandler = async (req, res) => {
+// Controller to handle fetching a user profile by ID
+const getUserHandler = async (req, res) => {
   try {
-    const userData = req.body;
-    const user = await createUser(userData);
-    return res.status(201).json(user);
+    const { userId } = req.params; // Get userId from the URL params
+    const user = await getUserProfile(userId); // Call the getUserProfile function from the model
+    res.status(200).json(user); // Respond with the user data
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    res.status(404).json({ error: error.message }); // If the user is not found, respond with 404
   }
 };
 
 module.exports = {
-  getUsers,
-  createUserHandler
+  createUserHandler,
+  getUserHandler,
 };
-
-  
