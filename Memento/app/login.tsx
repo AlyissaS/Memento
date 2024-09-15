@@ -1,10 +1,9 @@
-import {StyleSheet, View, Text, Pressable,TextInput, KeyboardAvoidingView, Platform, ActivityIndicator} from "react-native";
+import {StyleSheet, View, Text, Pressable,TextInput, ActivityIndicator} from "react-native";
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { router, useLocalSearchParams } from 'expo-router';
-import auth from '@react-native-firebase/auth';
-import { defaultStyles } from "@/constants/Styles";
+import {signInWithEmailAndPassword } from 'firebase/auth';
+import {useLocalSearchParams } from 'expo-router';
+import { FIREBASE_AUTH } from "@/FirebaseConfig";
 
 
 export default function LoginScreen() {
@@ -12,36 +11,36 @@ export default function LoginScreen() {
 	const [password, setPassword] = useState('');
 	const [loading, setLoading] = useState(false);
 	const { type } = useLocalSearchParams<{ type: string }>();
-  	
+	const auth = FIREBASE_AUTH;
+
+	const signIn = async () => {
+		setLoading(true);
+		try {
+			const response = await signInWithEmailAndPassword(auth,email,password);
+			console.log(response);
+			alert('Check your emails!');
+		} catch(error : any){
+			console.log(error);
+			alert('Sign in failed:' + error.message);
+		} finally {
+			setLoading(false);
+		}
+	}
   	return (
-		<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-      keyboardVerticalOffset={1}>
-		{loading && (
-			<View style={defaultStyles.loadingOverlay}>
-				<ActivityIndicator size="large" color="white"/>
-			</View>
-		)}
+		
       <View style={styles.loginScreen}>
       <View style={[styles.form, styles.formLayout]}>
       <View style={[styles.formChild, styles.formLayout]} />
-      <Pressable style={styles.dontHaveAnContainer}>
-      <Text style={styles.text}>
-      <Text style={styles.dontHaveAn}>{`Don’t have an account? `}</Text>
-      <Text style={styles.signUp}>Sign Up</Text>
-      </Text>
-      </Pressable>
-      <View style={[styles.google, styles.googleLayout]}>
-      <View style={[styles.googleChild, styles.childPosition]} />
-      <Text style={styles.google1}>Google</Text>
-      <Image style={styles.vectorIcon} contentFit="cover" source="Vector.png" />
-      </View>
       <Text style={[styles.forgotPassword, styles.logIn1FlexBox]}>Forgot password?</Text>
       <View style={[styles.logIn, styles.logLayout]}>
       <View style={[styles.logInChild, styles.logLayout]} />
-      <Pressable style={[styles.logIn1, styles.logLayout]}>
+	  {loading ? (
+		<ActivityIndicator size="large" color="white"/>
+	  ):(
+		<Pressable style={[styles.logIn1, styles.logLayout]} onPress={signIn}>
         <Text style={styles.textLayout}>Log In</Text>
-        </Pressable>
+      </Pressable>
+	  )}
       </View>
           					<TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
           					</TextInput>
@@ -49,9 +48,8 @@ export default function LoginScreen() {
           					</TextInput>
       <Text style={styles.logIn2}>Log In</Text>
       </View>
-      <Image style={styles.loginpicIcon} contentFit="cover" source="loginpic.png" />
+      <Image style={styles.loginpicIcon} contentFit="cover" source="assets/images/loginpic.png" />
       </View>
-	  </KeyboardAvoidingView>
 	  );
         				};
         				
@@ -175,12 +173,8 @@ export default function LoginScreen() {
             						height: 21,
             						position: "absolute"
           					},
-          					google: {
-            						top: 417,
-            						left: 156
-          					},
           					forgotPassword: {
-            						top: 377,
+            						top: 390,
             						height: 22,
             						fontSize: 12,
             						justifyContent: "center",
