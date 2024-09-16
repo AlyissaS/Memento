@@ -1,21 +1,27 @@
-const firebase = require('../config/firebase');
+const { db, FieldValue } = require('../config/firebase');
+
 
 const imageModel = {
   imageId: '',
   userId: '',
   imageUrl: '',
   description: '',
-  uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+  uploadedAt: FieldValue.serverTimestamp()
 };
 
 const createImage = async (imageData) => {
-  const imageRef = firebase.firestore().collection('images').doc(imageData.imageId);
-  await imageRef.set(imageData);
-  return imageData;
+  const imageRef = db.collection('images').doc(imageData.imageId);
+  const newImage = {
+    ...imageModel,
+    ...imageData,
+    uploadedAt: FieldValue.serverTimestamp(),
+  };
+  await imageRef.set(newImage);
+  return newImage;
 };
 
 const getImagesByUserId = async (userId) => {
-  const imagesRef = firebase.firestore().collection('images').where('userId', '==', userId);
+  const imagesRef = db.collection('images').where('userId', '==', userId);
   const snapshot = await imagesRef.get();
   if (snapshot.empty) {
     return [];

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getRecordings, createRecording } = require('../controllers/recordingController');
+const { getRecordings, createRecordingHandler, getRecordingByIdHandler  } = require('../controllers/recordingController');
 
 router.get('/', getRecordings);
-router.post('/', createRecording);
+router.post('/', createRecordingHandler );
+router.get('/:recordingId', getRecordingByIdHandler);
 
 module.exports = router;
