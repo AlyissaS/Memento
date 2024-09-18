@@ -1,8 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const { createOrUpdateAIProfileHandler, getAIProfileHandler } = require('../controllers/aiController');
 
-router.post('/', createOrUpdateAIProfileHandler);
-router.get('/:userId', getAIProfileHandler);
+const express = require('express');
+const { analyzeFileHandler } = require('../controllers/aiController');
+const router = express.Router();
+
+router.post('/analyze', analyzeFileHandler);  
 
 module.exports = router;
+

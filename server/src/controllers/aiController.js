@@ -1,26 +1,14 @@
-const { createOrUpdateAIProfile, getAIProfileByUserId } = require('../models/aiProfileModel');
+// src/controllers/aiController.js
+const { analyzeFileWithAI } = require('../services/aiService');
 
-const createOrUpdateAIProfileHandler = async (req, res) => {
+const analyzeFileHandler = async (req, res) => {
   try {
-    const aiProfileData = req.body;
-    const updatedProfile = await createOrUpdateAIProfile(aiProfileData);
-    res.status(201).json(updatedProfile);
+    const { gcsFileUri, type } = req.body;
+    const analysisResult = await analyzeFileWithAI(gcsFileUri, type);
+    res.status(200).json({ result: analysisResult });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-const getAIProfileHandler = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const aiProfile = await getAIProfileByUserId(userId);
-    res.status(200).json(aiProfile);
-  } catch (error) {
-    res.status(404).json({ error: error.message });
-  }
-};
-
-module.exports = {
-  createOrUpdateAIProfileHandler,
-  getAIProfileHandler,
-};
+module.exports = { analyzeFileHandler };
