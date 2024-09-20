@@ -2,7 +2,7 @@ import {StyleSheet, View, Text, Pressable,TextInput, ActivityIndicator} from "re
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import {signInWithEmailAndPassword } from 'firebase/auth';
-import {useLocalSearchParams } from 'expo-router';
+import {router, useLocalSearchParams } from 'expo-router';
 import { FIREBASE_AUTH } from "@/FirebaseConfig";
 
 
@@ -18,7 +18,7 @@ export default function LoginScreen() {
 		try {
 			const response = await signInWithEmailAndPassword(auth,email,password);
 			console.log(response);
-			alert('Check your emails!');
+			router.navigate('/(tabs)/dashboard')
 		} catch(error : any){
 			console.log(error);
 			alert('Sign in failed:' + error.message);
@@ -42,10 +42,10 @@ export default function LoginScreen() {
       </Pressable>
 	  )}
       </View>
-          					<TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
-          					</TextInput>
-          					<TextInput style={[styles.email, styles.emailPosition]} value={email} autoCapitalize="none" keyboardType="email-address" onChangeText={setEmail} placeholder="Email">
-          					</TextInput>
+      <TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
+        </TextInput>
+        <TextInput style={[styles.email, styles.emailPosition]} value={email} autoCapitalize="none" keyboardType="email-address" onChangeText={setEmail} placeholder="Email">
+        </TextInput>
       <Text style={styles.logIn2}>Log In</Text>
       </View>
       <Image style={styles.loginpicIcon} contentFit="cover" source="assets/images/loginpic.png" />

@@ -19,7 +19,7 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen name="index" options={{headerShown:false,}}/>
       {user ? (
-         <Stack.Screen name="dashboard" options={{headerShown:false,}}/>
+         <Stack.Screen name="(tabs)" options={{headerShown:false,}}/>
       ) : (
         <Stack.Screen name="login" options={{presentation:'modal', title:'', headerLeft: () => (
           <TouchableOpacity onPress={() => router.back()}>

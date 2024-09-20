@@ -1,6 +1,7 @@
 import { Text, View, Button} from "react-native";
 import auth from '@react-native-firebase/auth';
 import { FIREBASE_AUTH } from "@/FirebaseConfig";
+import { Tabs } from "expo-router";
 
 export default function DashboardScreen() {
   const user = auth().currentUser;

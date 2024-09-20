@@ -1,114 +1,148 @@
-import { StyleSheet, View, Text, Pressable, ScrollView} from "react-native";
+import { StyleSheet, View, Text, Pressable, TextInput, ScrollView, Button, ActivityIndicator} from "react-native";
 import { Image } from 'expo-image';
 import {Link, useLocalSearchParams} from 'expo-router';
-import { FIREBASE_AUTH } from "@/FirebaseConfig";
-import { useState } from "react";
+import { DATABASE, FIREBASE_AUTH, FIREBASE_DB } from "@/FirebaseConfig";
+import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { firebase } from "@react-native-firebase/auth";
+import {ref, set} from 'firebase/database';
 
 export default function SignUpScreen() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [name, setName] = useState('');
+	const [number, setPhoneNumber] = useState('');
+  	const [value, setValue] = useState(null);
+	const [value1, setValue1] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const { type } = useLocalSearchParams<{ type: string }>();
 	const auth = FIREBASE_AUTH;
+	  // State for selected button
+	  const [selectedButton, setSelectedButton] = useState('');
 
 	const signUp = async () => {
 		setLoading(true);
 		try {
-			const response = await createUserWithEmailAndPassword(auth,email,password);
-			console.log(response);
+		  // Create user with email and password
+		  const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+		  const user = userCredential.user; // Extract the user from the credential
+	  
+		  if (user) {
+			const userId = user.uid;
+			const database = DATABASE;
+	  
+			// Update the Firebase Realtime Database
+			await set(ref(database,'users/' + userId),{
+			  firstname: name,
+			  email: email,
+			  password: password,
+			  selectedButton: selectedButton,
+			  emailVerified: false,
+			  uid: userId,
+			  status: true,
+			  online: true,
+			});
+	  
+			console.log('User created and data stored successfully');
 			alert('Check your emails!');
-		} catch(error : any){
-			console.log(error);
-			alert('Registeration failed:' + error.message);
-		}finally {
-			setLoading(false);
+		  }
+		} catch (error : any) {
+		  console.log('Registration failed:', error.message);
+		  alert('Registration failed: ' + error.message);
+		} finally {
+		  setLoading(false);
 		}
-	}
+	  };
+	    // Function to handle button press
+		const handleButtonPress = (button : string) => {
+			setSelectedButton(button);
+		};
+	  
   	
   	return (
-		<ScrollView>
-				<View style={styles.registrationScreenPart2}>
+		<>
+	<View style={styles.registrationScreenPart2}>
 	<Image style={[styles.ripplepic2Icon, styles.iconLayout]} contentFit="cover" source="assets/images/ripplepic.png" />
 	<Image style={[styles.fishes1Icon, styles.iconLayout]} contentFit="cover" source="assets/images/fishes.png" />
-	<View style={[styles.registrationScreenPart2Child, styles.childShadowBox]} />
-	<View style={[styles.birthday, styles.emailLayout]}>
-	<View style={styles.birthdayChild} />
-	<Text style={[styles.birthday1, styles.email1Layout]}>Birthday</Text>
-	</View>
-	<View style={[styles.number, styles.emailLayout]}>
-	<View style={styles.birthdayChild} />
-	<Text style={[styles.birthday1, styles.email1Layout]}>Phone Number</Text>
-	</View>
-	<View style={[styles.email, styles.emailLayout]}>
-	<View style={styles.birthdayChild} />
-	<Text style={[styles.email1, styles.email1Layout]}>Email</Text>
-	</View>
-	<View style={[styles.fullName, styles.emailLayout]}>
-	<View style={styles.birthdayChild} />
-	<Text style={[styles.fullName1, styles.email1Layout]}>Full Name</Text>
-	</View>
-	<View style={[styles.password, styles.emailLayout]}>
-	<View style={styles.birthdayChild} />
-	<Text style={[styles.fullName1, styles.email1Layout]}>Password</Text>
-	</View>
-	<View style={[styles.email2, styles.emailLayout]}>
-	<View style={styles.birthdayChild} />
-	<Text style={[styles.birthday1, styles.email1Layout]}>Confirm Password</Text>
-	</View>
+	<View style={[styles.registrationScreenPart2Child]} />
+	<SafeAreaView>
+	<TextInput style={[styles.number, styles.emailPosition]} value={number} autoCapitalize="none" keyboardType="number-pad" onChangeText={setPhoneNumber} placeholder="Phone Number"/>
+	<TextInput style={[styles.email, styles.emailPosition]} value={email} autoCapitalize="none" keyboardType="email-address" onChangeText={setEmail} placeholder="Email">
+	</TextInput>
+	<TextInput style={[styles.fullName, styles.emailPosition]} value={name} autoCapitalize="none" keyboardType="default" onChangeText={setName} placeholder="Full Name">
+	</TextInput>
+	<TextInput style={[styles.password, styles.emailPosition]} value={password} onChangeText={setPassword} secureTextEntry placeholder="Password">
+	</TextInput>
+	</SafeAreaView>
 	<Text style={styles.signUp}>Sign Up</Text>
 	<Image style={styles.registrationScreenPart2Item} contentFit="cover" source="assets/images/Group 1.png" />
-	<View style={styles.rectangleParent}>
-	<View style={[styles.groupChild, styles.groupLayout]} />
-	<View style={[styles.groupItem, styles.groupLayout]} />
-	<View style={[styles.groupInner, styles.groupLayout]} />
-	<Text style={[styles.genderFluid, styles.maleTypo]}>Gender Fluid</Text>
-	<Text style={[styles.male, styles.maleTypo]}>Male</Text>
-	<Text style={[styles.female, styles.maleTypo]}>Female</Text>
-	<Text style={[styles.gender, styles.email1Layout]}>Gender</Text>
-	</View>
 	<View style={styles.rectangleGroup}>
-	<View style={[styles.rectangleView, styles.groupChildPosition]} />
-	<View style={[styles.groupChild1, styles.groupChild1Layout]} />
-	<View style={[styles.groupChild2, styles.groupChildPosition]} />
-	<Text style={[styles.familyMember, styles.patientFlexBox]}>Family member</Text>
-	<Text style={[styles.caretaker, styles.patientFlexBox]}>Caretaker</Text>
-	<Text style={[styles.patient, styles.patientFlexBox]}>Patient</Text>
-	<Text style={[styles.areYouThe, styles.areYouThePosition]}>Are you the patient, primary caretaker or family member?</Text>
+	<Text style={styles.areYouThe}>Are you the patient, primary caretaker or family member?</Text>
 	</View>
-	<View style={[styles.relations, styles.relationsLayout]}>
-	<View style={styles.relationsChild} />
-	<Text style={[styles.relationsToThe, styles.email1Layout]}>Relations to the patient</Text>
+	<View style={styles.buttonContainer}>
+                    {['Family Member', 'Caretaker', 'Patient'].map((label) => (
+                        <Pressable
+                            key={label}
+                            onPress={() => handleButtonPress(label)}
+                            style={[
+                                styles.button,
+                                { backgroundColor: selectedButton === label ? 'orange' : '#d9d9d9' } // Change color based on selection
+                            ]}
+                        >
+                            <Text style={styles.buttonText}>{label}</Text>
+                        </Pressable>
+                    ))}
+                </View>
 	</View>
-	<View style={[styles.condition, styles.relationsLayout]}>
-	<View style={styles.relationsChild} />
-	<Text style={[styles.condition1, styles.areYouThePosition]}>Condition</Text>
-	</View>
-	</View>
-	<Link href="/dashboard" style={[styles.submitButton, styles.submitLayout]}>
-	<Pressable style={[styles.submitButtonChild, styles.submitLayout]}>
-	<Text style={[styles.submit]}>Submit</Text>
-	</Pressable>
-	</Link>
-						</ScrollView>
-						);
-      			};
+	{loading ? (
+		<ActivityIndicator size="large" color="white"/>
+	  ):(
+		<View style={[styles.submitButton, styles.submitLayout]}>
+		<Pressable style={[styles.submitButtonChild, styles.submitLayout]} onPress={signUp}>
+        <Text style={[styles.submit]}>Sign Up</Text>
+      </Pressable>
+	  </View>
+	  )}
+	</>
+	);
+    };
       			
       			const styles = StyleSheet.create({
+					buttonContainer: {
+						flexDirection: 'row', // Align buttons in a row
+						justifyContent: 'space-between', // Space buttons evenly
+						marginTop: 20, // Space between text and buttons
+						width: '100%', // Full width
+					},
+					button: {
+						flex: 1, // Allow buttons to grow
+						marginHorizontal: 5, // Space between buttons
+						height: 30,
+						borderRadius: 10,
+						justifyContent: "center",
+						alignItems: "center",
+					},
+					buttonText: {
+						color: "#000",
+						fontSize: 14,
+						fontFamily: "Belgrano-Regular",
+					},
+					container: {
+						flex: 1,
+						padding: 20,
+					  },
+					datePosition: {
+						top:560,
+					},
+					emailPosition: {
+						width: 349,
+						left: 35,
+						position: "absolute"
+				  },
 					iconLayout: {
 					width: 430,
 					position: "absolute"
-					},
-					childShadowBox: {
-					shadowOpacity: 1,
-					elevation: 4,
-					shadowRadius: 4,
-					shadowOffset: {
-					width: 0,
-					height: 4
-					},
-					shadowColor: "rgba(0, 0, 0, 0.25)",
-					left: 0
 					},
 					emailLayout: {
 					height: 23,
@@ -122,14 +156,14 @@ export default function SignUpScreen() {
 					groupLayout: {
 					height: 25,
 					borderRadius: 10,
-					top: 29,
+					top: -25,
 					backgroundColor: "#d9d9d9",
 					position: "absolute"
 					},
 					maleTypo: {
 					height: 11,
 					fontSize: 11,
-					top: 36,
+					top: -20,
 					justifyContent: "center",
 					textAlign: "center",
 					alignItems: "center",
@@ -139,7 +173,7 @@ export default function SignUpScreen() {
 					position: "absolute"
 					},
 					groupChildPosition: {
-					top: 67,
+					top: 70,
 					height: 25,
 					backgroundColor: "#d9d9d9",
 					borderRadius: 10,
@@ -150,8 +184,8 @@ export default function SignUpScreen() {
 					left: 242
 					},
 					patientFlexBox: {
-					top: 74,
-					height: 11,
+					top: 75,
+					height: 14,
 					justifyContent: "center",
 					fontSize: 11,
 					textAlign: "center",
@@ -168,16 +202,11 @@ export default function SignUpScreen() {
 					color: "#000",
 					fontFamily: "Belgrano-Regular",
 					fontSize: 14,
-					top: 0,
-					position: "absolute"
-					},
-					relationsLayout: {
-					height: 48,
-					position: "absolute"
+					top: -60,
 					},
 					submitLayout: {
-					height: 31,
-					width: 120,
+					height: 55,
+					width: 345,
 					position: "absolute"
 					},
 					ripplepic2Icon: {
@@ -199,35 +228,8 @@ export default function SignUpScreen() {
 					width: 430,
 					position: "absolute"
 					},
-					birthdayChild: {
-					top: 22,
-					borderStyle: "solid",
-					borderColor: "#000",
-					borderTopWidth: 1,
-					width: 350,
-					height: 1,
-					left: 0,
-					position: "absolute"
-					},
-					birthday1: {
-					width: 132,
-					alignItems: "center",
-					display: "flex",
-					color: "#000",
-					fontFamily: "Belgrano-Regular",
-					fontSize: 14,
-					height: 22,
-					textAlign: "left",
-					position: "absolute",
-					left: 0,
-					top: 0
-					},
-					birthday: {
-					top: 670,
-					left: 34
-					},
 					number: {
-					top: 712,
+					top: 600,
 					left: 34
 					},
 					email1: {
@@ -244,7 +246,7 @@ export default function SignUpScreen() {
 					top: 0
 					},
 					email: {
-					top: 473,
+					top: 500,
 					left: 35
 					},
 					fullName1: {
@@ -261,11 +263,11 @@ export default function SignUpScreen() {
 					top: 0
 					},
 					fullName: {
-					top: 432,
+					top: 450,
 					left: 35
 					},
 					password: {
-					top: 514,
+					top: 550,
 					left: 35
 					},
 					email2: {
@@ -293,42 +295,17 @@ export default function SignUpScreen() {
 					left: 0
 					},
 					groupItem: {
-					left: 91,
+					left: 120,
 					width: 77
 					},
 					groupInner: {
-					left: 185,
-					width: 90
-					},
-					genderFluid: {
-					left: 188,
-					width: 81
-					},
-					male: {
-					left: 103,
-					width: 53
-					},
-					female: {
-					left: 11,
-					width: 53
-					},
-					gender: {
-					width: 64,
-					alignItems: "center",
-					display: "flex",
-					color: "#000",
-					fontFamily: "Belgrano-Regular",
-					fontSize: 14,
-					height: 22,
-					textAlign: "left",
-					position: "absolute",
-					left: 0,
-					top: 0
+					left: 242,
+					width: 103,
 					},
 					rectangleParent: {
 					top: 597,
 					width: 275,
-					height: 54,
+					height: 53,
 					left: 34,
 					position: "absolute"
 					},
@@ -337,7 +314,7 @@ export default function SignUpScreen() {
 					left: 0
 					},
 					groupChild1: {
-					top: 67,
+					top: 70,
 					height: 25,
 					backgroundColor: "#d9d9d9",
 					borderRadius: 10,
@@ -345,10 +322,10 @@ export default function SignUpScreen() {
 					},
 					groupChild2: {
 					left: 121,
-					width: 77
+					width: 77,
 					},
 					familyMember: {
-					width: 103,
+					width: 105,
 					left: 242
 					},
 					caretaker: {
@@ -360,55 +337,18 @@ export default function SignUpScreen() {
 					width: 53
 					},
 					areYouThe: {
-					width: 344,
+					width: 370,
 					height: 32,
 					justifyContent: "center",
-					left: 1,
+					left: 35,
 					textAlign: "center"
 					},
 					rectangleGroup: {
-					top: 321,
-					width: 345,
-					height: 92,
-					left: 34,
-					position: "absolute"
-					},
-					relationsChild: {
-					top: 25,
-					width: 131,
-					backgroundColor: "#d9d9d9",
-					height: 23,
-					left: 0,
-					position: "absolute"
-					},
-					relationsToThe: {
-					width: 168,
-					alignItems: "center",
-					display: "flex",
-					color: "#000",
-					fontFamily: "Belgrano-Regular",
-					fontSize: 14,
-					height: 22,
-					textAlign: "left",
-					position: "absolute",
-					left: 0,
-					top: 0
-					},
-					relations: {
-					top: 753,
-					width: 168,
-					left: 35
-					},
-					condition1: {
-					width: 168,
-					height: 22,
-					textAlign: "left",
-					left: 1
-					},
-					condition: {
-					top: 809,
-					width: 169,
-					left: 34
+						flexDirection: 'row', // Align children in a row
+						justifyContent: 'space-between', // Space out buttons evenly
+						alignItems: 'center', // Center vertically
+						marginTop: 230, // Adjust as necessary
+						width: '100%', // Use full width of the container
 					},
 					submitButtonChild: {
 					borderRadius: 20,
@@ -425,21 +365,19 @@ export default function SignUpScreen() {
 					top: 0
 					},
 					submit: {
-						top: 7,
-						left: 35,
-						width: 54,
-						alignItems: "center",
-						display: "flex",
-						color: "#000",
-						fontFamily: "Belgrano-Regular",
-						fontSize: 14,
-						height: 22,
-						textAlign: "center",
-						position: "absolute"
+						fontSize: 16,
+            			justifyContent: "center",
+            			alignItems: "center",
+            			display: "flex",
+            			color: "#000",
+            			textAlign: "center",
+            			fontFamily: "Belgrano-Regular",
+            			left: 0,
+            			top: 15
 					},
 					submitButton: {
-					top: 876,
-					left: 155
+					top: 700,
+					left: 50
 					},
 					registrationScreenPart2: {
 					backgroundColor: "#558cbf",
