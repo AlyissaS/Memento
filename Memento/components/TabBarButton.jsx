@@ -1,7 +1,8 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native'
+import {Pressable, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import { icons } from '../assets/icons';
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const TabBarButton = (props) => {
     const {isFocused, label, routeName, color} = props;

@@ -1,5 +1,4 @@
 import { AntDesign, Feather } from "@expo/vector-icons";
-import {QuestionOutlined} from '@ant-design/icons';
 
 export const icons = {
     dashboard: (props)=> <AntDesign name="home" size={26} {...props} />,
