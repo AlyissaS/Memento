@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     		fontFamily: "Belgrano-Regular",
     		fontSize: 40,
     		left: 0,
-    		top: 0,
+    		top: 15,
     		height: 81,
     		width: 332,
     		position: "absolute"
